@@ -109,15 +109,6 @@ html, body {
   pointer-events: none;  /* let clicks pass through to canvas */
 }
 
-.eyebrow {
-  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--aqua);
-  margin-bottom: 1rem;
-  opacity: 0;
-  animation: fadeUp 1s 0.5s ease forwards;
-}
 
 .title {
   font-family: var(--ff-serif);
