@@ -122,7 +122,64 @@ function spawnWord(x, y) {
   el.addEventListener('animationend', () => el.remove());
 }
 
+// ===========================
+// EASTER EGG — full quote after 10 clicks
+// ===========================
+const EASTER_EGG_THRESHOLD = 10;
+const FULL_QUOTE = `"Empty your mind, be formless, shapeless, like water. Now you put water into a cup, it becomes the cup. You put water into a bottle, it becomes the bottle. You put it in a teapot, it becomes the teapot. Now water can flow or it can crash. Be water, my friend."`;
+
+const easterEgg      = document.getElementById('easter-egg');
+const easterEggQuote = document.getElementById('easter-egg-quote');
+const easterEggClose = document.getElementById('easter-egg-close');
+
+let typewriterTimer = null;
+
+function typeWriter(text, el, speed = 28) {
+  el.textContent = '';
+  el.classList.remove('done');
+  let i = 0;
+  clearInterval(typewriterTimer);
+  typewriterTimer = setInterval(() => {
+    el.textContent += text[i];
+    i++;
+    if (i >= text.length) {
+      clearInterval(typewriterTimer);
+      el.classList.add('done'); // hide blinking cursor
+    }
+  }, speed);
+}
+
+function showEasterEgg() {
+  easterEgg.classList.add('active');
+  easterEgg.setAttribute('aria-hidden', 'false');
+  // slight delay so the overlay fades in before typing starts
+  setTimeout(() => typeWriter(FULL_QUOTE, easterEggQuote, 30), 600);
+}
+
+function hideEasterEgg() {
+  easterEgg.classList.remove('active');
+  easterEgg.setAttribute('aria-hidden', 'true');
+  clearInterval(typewriterTimer);
+  easterEggQuote.textContent = '';
+  easterEggQuote.classList.remove('done');
+}
+
+easterEggClose.addEventListener('click', hideEasterEgg);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') hideEasterEgg();
+});
+
+// ===========================
+// CLICK HANDLER
+// ===========================
+let clickCount = 0;
+
 document.addEventListener('click', (e) => {
+  // Don't count clicks on the close button
+  if (e.target === easterEggClose) return;
+  // If easter egg is open, ignore ripple/word
+  if (easterEgg.classList.contains('active')) return;
+
   spawnRipples(e.clientX, e.clientY);
   spawnWord(e.clientX, e.clientY);
 
@@ -132,5 +189,12 @@ document.addEventListener('click', (e) => {
     hint.style.transition = 'opacity 0.6s';
     hint.style.opacity = '0';
     setTimeout(() => hint.remove(), 700);
+  }
+
+  // Easter egg counter
+  clickCount++;
+  if (clickCount >= EASTER_EGG_THRESHOLD) {
+    clickCount = 0; // reset so it can trigger again
+    setTimeout(showEasterEgg, 400); // slight delay after last ripple
   }
 });
