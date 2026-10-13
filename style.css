@@ -112,17 +112,27 @@ html, body {
 
 .title {
   font-family: var(--ff-serif);
-  font-size: clamp(5rem, 14vw, 13rem);
+  font-size: clamp(4rem, 11vw, 11rem);
   font-weight: 700;
-  line-height: 0.95;
+  line-height: 1.0;
   color: var(--white);
   margin-bottom: 1.2rem;
-  opacity: 0;
-  animation: fadeUp 1s 0.8s ease forwards;
+  display: flex;
+  flex-direction: column;
   text-shadow:
     0 2px 40px rgba(0, 0, 0, 0.8),
     0 0 80px rgba(0, 212, 255, 0.1);
 }
+
+.title-line {
+  display: block;
+  opacity: 0;
+  transform: translateY(18px);
+  animation: fadeUp 1s ease forwards;
+}
+
+.title-line:nth-child(1) { animation-delay: 0.8s; }
+.title-line:nth-child(2) { animation-delay: 1.1s; }
 
 .title em {
   font-style: italic;
